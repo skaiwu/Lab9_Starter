@@ -69,25 +69,31 @@
     </form>
 
     <section id="error-btns">
-      <button>Console Log</button>
-      <button>Console Error</button>
-      <button>Console Count</button>
-      <button>Console Warn</button>
-      <button>Console Assert</button>
-      <button>Console Clear</button>
-      <button>Console Dir</button>
-      <button>Console dirxml</button>
-      <button>Console Group Start</button>
-      <button>Console Group End</button>
-      <button>Console Table</button>
-      <button>Start Timer</button>
-      <button>End Timer</button>
-      <button>Console Trace</button>
-      <button>Trigger a Global Error</button>
+      <button id="log">Console Log</button>
+      <button id="error">Console Error</button>
+      <button id="count">Console Count</button>
+      <button id="warn">Console Warn</button>
+      <button id="assert">Console Assert</button>
+      <button id="clear">Console Clear</button>
+      <button id="dir">Console Dir</button>
+      <button id="dirxml">Console dirxml</button>
+      <button id="start">Console Group Start</button>
+      <button id="group">Console Group End</button>
+      <button id="table">Console Table</button>
+      <button id="stimer">Start Timer</button>
+      <button id="etimer">End Timer</button>
+      <button id="trace">Console Trace</button>
+      <button id="trigger">Trigger a Global Error</button>
     </section>
   </main>
 
   <script>
+    class CustomError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "Custom Error";
+      }
+  }
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -95,14 +101,118 @@
       let firstNum = document.querySelector('#first-num').value;
       let secondNum = document.querySelector('#second-num').value;
       let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      let answer = "a";
+      try{
+        answer = eval(`${firstNum} ${operator} ${secondNum}`);
+      }catch(err){
+        alert("error has occurred");
+        throw new CustomError();
+      }finally{
+        if (answer !== "a"){
+          output.innerHTML = answer; 
+        }
+      }
     });
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+    let log = document.getElementById("log");
+    log.addEventListener("click", e =>{
+      console.log("First Number: " + document.querySelector('#first-num').value + " Second Number: " + document.querySelector('#second-num').value);
+    })
+    let error = document.getElementById("error");
+    error.addEventListener("click", e =>{
+      console.error("Sorry, here is an error");
+    })
+    let count = document.getElementById("count");
+    count.addEventListener("click", e=>{
+      console.count();
+      console.count("CSE 142 Program");
+    })
+    let warn = document.getElementById("warn");
+    warn.addEventListener("click", e=>{
+      console.warn("This is your warning");
+    })
+    let assert = document.getElementById("assert");
+    assert.addEventListener("click", e =>{
+      const x = document.querySelector('#first-num').value;
+      const y = document.querySelector('#second-num').value;
+      const reason = 'x and y should both be numbers and should not be left blank';
+      console.assert(x !== "" && y !== "", {x, y, reason});
+    })
+    let clear = document.getElementById("clear");
+    clear.addEventListener("click", e =>{
+      console.clear();
+    })
+    let dir = document.getElementById("dir");
+    dir.addEventListener("click", e=>{
+      console.dir(document.head);
+    })
+    let dirxml = document.getElementById("dirxml");
+    dirxml.addEventListener("click", e=>{
+      console.dirxml(document);
+    })
+    let start = document.getElementById("start");
+    start.addEventListener("click", e=>{
+      console.start();
+    })
+    let group = document.getElementById("group");
+    group.addEventListener("click", e=>{
+      console.group("Names");
+      console.info("Kai");
+      console.info("Kei");
+      console.info("Koi");
+      console.groupEnd("Names");
+    })
+    let trace = document.getElementById("trace");
+    trace.addEventListener("click", e=>{
+      const first = () => { second(); };
+const second = () => { third(); };
+const third = () => { fourth(); };
+const fourth = () => { console.trace(); };
+first();
+    })
+    let stimer = document.getElementById("stimer");
+    stimer.addEventListener("click", e=>{
+      console.time();
+    })
+    let etimer = document.getElementById("etimer");
+    etimer.addEventListener("click", e=>{
+      console.timeEnd();
+    })
+    let table = document.getElementById("table");
+    table.addEventListener("click", e=>{
+      console.table([
+  {
+    first: 'René',
+    last: 'M',
+  },
+  {
+    first: 'Chaim',
+    last: 'S',
+    birthday: '18930113',
+  },
+  {
+    first: 'Henri',
+    last: 'M',
+  }
+]);
+    })
+    let trigger = document.getElementById("trigger");
+    trigger.addEventListener("click", e=>{
+      throw new CustomError();
+    })
   </script>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+<script>
+  window.TrackJS && TrackJS.install({ 
+    token: "16a16a8cca6c4ee9a81dabbabc642c00"
+    // for more configuration options, see https://docs.trackjs.com
+  });
+</script>
+                        
 </body>
 
 </html>
